@@ -1,0 +1,29 @@
+# --- Environment & Credentials ---
+.env
+config/config.local.php
+
+# --- Dependency Managers ---
+/vendor/
+.composer/
+
+# --- OS & IDE Metadata ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# --- XAMPP & Uploads ---
+# Ignore user-uploaded files in production, but keep the folder
+public/assets/uploads/*
+!public/assets/uploads/.gitkeep
+
+# --- Logs & Cache ---
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
