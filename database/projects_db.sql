@@ -1,8 +1,8 @@
-CREATE DATABASE projects_db;
-
+DROP DATABASE IF EXISTS projects_db;
+CREATE DATABASE IF NOT EXISTS projects_db;
 USE projects_db;
 
-CREATE TABLE users_tbl ( 
+CREATE TABLE IF NOT EXISTS users_tbl ( 
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL
@@ -10,7 +10,7 @@ CREATE TABLE users_tbl (
 
 INSERT INTO users_tbl (username, password) VALUES ('admin', 'admin123');
  
-CREATE TABLE projects_tbl (
+CREATE TABLE IF NOT EXISTS projects_tbl (
     proj_id INT AUTO_INCREMENT PRIMARY KEY,
     proj_title VARCHAR(255) NOT NULL,
     proj_start_date DATE NOT NULL, 
