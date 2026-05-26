@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users_tbl (
     password VARCHAR(255) NOT NULL
 );
 
-INSERT INTO users_tbl (username, password) VALUES ('admin', 'admin123');
+INSERT INTO users_tbl (username, password) VALUES ('admin', '$2y$10$ashltEzuZkysdAoAdGqRPu.cehasqKapSpQ4fZ0suvjoMNekiIhCy');
  
 CREATE TABLE IF NOT EXISTS projects_tbl (
     proj_id INT AUTO_INCREMENT PRIMARY KEY,
