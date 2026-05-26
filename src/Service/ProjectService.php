@@ -4,23 +4,21 @@ require_once __DIR__ . '/../Repository/ProjectsRepository.php';
 require_once __DIR__ . '/../Models/Projects.php';
 
 class ProjectService{
+    private ProjectsRepository $repository;
 
-    private Projects $model;
-
-    public function __construct(Projects $model){
-        $this->model = $model;
+    public function __construct(ProjectsRepository $repository){
+        $this->repository = $repository;
     }
 
     public function getAllProjects(): array{
-        return[];
+        return $this->repository->getAllProjects();
     }
     
     public function getProjectById(int $id): ?Projects{
-        return null;
+        return $this->repository->getProjectById($id);
     }
 
     public function createProject(
-        int $id,
         string $title,
         string $description,
         bool $is_done,
@@ -30,11 +28,14 @@ class ProjectService{
         string $type,
         string $budget
     ): bool{
-        return true;
+        $proj = new Projects(null, $title, $start_date, $end_date, $budget, $description, $is_done, $is_visible, $type);
+        if ($this->repository->addProject($proj)) {
+            return true;
+        }
+        return false;
     }
 
     public function updateProject(
-        int $id,
         string $title,
         string $description,
         bool $is_done,
@@ -44,10 +45,11 @@ class ProjectService{
         string $type,
         string $budget
     ): bool{
-        return true;
+        $updProj = new Projects(null, $title, $start_date, $end_date, $budget, $description, $is_done, $is_visible, $type);
+        return $this->repository->updateProject($updProj);
     }
 
     public function deleteProject(int $id): bool{
-        return true;
+        return $this->repository->deleteProject($id);
     }
 }
