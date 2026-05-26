@@ -2,12 +2,11 @@
 require_once __DIR__ . '/../src/Models/Projects.php';
 require_once __DIR__ . '/../src/Repository/ProjectsRepository.php';
 require_once __DIR__ . '/../src/Service/ProjectService.php';
- 
-// $repository = new ProjectsRepository();
-// $service    = new ProjectService(new Projects(0, '', '', '', 0, '', false, true, ''));
 
-// $allProjects = $repository->getAllProjects();
-// $visibleProjects = array_filter($allProjects, fn($p) => $p->getIsVisible());
+$pdo = require __DIR__ . '/../config/database.php';
+$repository     = new ProjectsRepository($pdo);
+$projectService = new ProjectService($repository);
+$visibleProjects = $projectService->getVisibleProjects();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -50,10 +49,10 @@ require_once __DIR__ . '/../src/Service/ProjectService.php';
           </div>
           <nav class="site-navigation text-left ml-auto" role="navigation">
             <ul class="site-menu main-menu js-clone-nav ml-auto d-none d-lg-block">
-              <li class="active"><a href="../public/index.php" class="nav-link">Home</a></li>
-                <li><a href="../src/Views/about.php" class="nav-link">About Us</a></li>
-                <li><a href="../src/Models/Projects.php" class="nav-link">Our Projects</a></li>
-                <li><a href="../src/Views/contact.php" class="nav-link">Contact</a></li>
+              <li class="active"><a href="index.php" class="nav-link">Home</a></li>
+              <li><a href="../src/Views/about.php" class="nav-link">About Us</a></li>
+              <li><a href="../src/Views/projects.php" class="nav-link">Our Projects</a></li>
+              <li><a href="../src/Views/contact.php" class="nav-link">Contact</a></li>
             </ul>
           </nav>
           <div class="ml-auto toggle-button d-inline-block d-lg-none">
@@ -71,13 +70,13 @@ require_once __DIR__ . '/../src/Service/ProjectService.php';
         <p><a href="#" class="btn btn-primary py-3 px-4 rounded-0">View Projects</a></p>
       </div>
       <div class="owl-carousel owl-1">
-        <div class="ftco-cover-1 overlay" style="background-image: url('/public/assets/images/cover-1.jpg');"></div>
-        <div class="ftco-cover-1 overlay" style="background-image: url('/public/assets/images/cover-2.jpg');"></div>
-        <div class="ftco-cover-1 overlay" style="background-image: url('/public/assets/images/cover-3.jpg');"></div>
+        <div class="ftco-cover-1 overlay" style="background-image: url('assets/images/cover-1.jpg');"></div>
+        <div class="ftco-cover-1 overlay" style="background-image: url('assets/images/cover-2.jpg');"></div>
+        <div class="ftco-cover-1 overlay" style="background-image: url('assets/images/cover-3.jpg');"></div>
       </div>
     </div>
  
-    <!-- ===== PROJECTS SECTION (dynamically rendered from ProjectsRepository) ===== -->
+    <!-- ===== PROJECTS SECTION (dynamically rendered via ProjectService) ===== -->
     <div class="site-section">
       <div class="container">
         <div class="row mb-5 align-items-start">
@@ -147,7 +146,7 @@ require_once __DIR__ . '/../src/Service/ProjectService.php';
         </div>
  
         <div class="text-center mt-3">
-          <a href="projects.php" class="btn btn-outline-primary">View All Projects</a>
+          <a href="../src/Views/projects.php" class="btn btn-outline-primary">View All Projects</a>
         </div>
       </div>
     </div>
@@ -256,9 +255,9 @@ require_once __DIR__ . '/../src/Service/ProjectService.php';
                 <h2 class="footer-heading mb-4">Quick Links</h2>
                 <ul class="list-unstyled">
                   <li><a href="index.php">Home</a></li>
-                  <li><a href="about.php">About Us</a></li>
-                  <li><a href="Projects.php">Projects</a></li>
-                  <li><a href="contact.php">Contact Us</a></li>
+                  <li><a href="../src/Views/about.php">About Us</a></li>
+                  <li><a href="../src/Views/projects.php">Projects</a></li>
+                  <li><a href="../src/Views/contact.php">Contact Us</a></li>
                 </ul>
               </div>
             </div>

@@ -13,6 +13,13 @@ class ProjectService{
     public function getAllProjects(): array{
         return $this->repository->getAllProjects();
     }
+
+    public function getVisibleProjects(): array{
+        return array_values(array_filter(
+            $this->repository->getAllProjects(),
+            fn(Projects $p) => $p->getIsVisible()
+        ));
+    }
     
     public function getProjectById(int $id): ?Projects{
         return $this->repository->getProjectById($id);
