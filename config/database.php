@@ -1,33 +1,25 @@
 <?php
-$host     = "localhost";
-$username = "root";
-$password = "";
-$dbname   = "projects_db";
+// config/database.php
 
-$conn = mysqli_connect($host, $username, $password);
+$host = '127.0.0.1';
+$db   = 'projects_db';
+$user = 'root';
+$pass = ''; 
+$charset = 'utf8mb4';
 
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
+$options = [
+    PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
+    PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
+    PDO::ATTR_EMULATE_PREPARES   => false,
+];
+
+try {
+    $pdo = new PDO($dsn, $user, $pass, $options);
+    
+    // Crucial: You must return the object!
+    return $pdo; 
+    
+} catch (\PDOException $e) {
+    throw new \PDOException($e->getMessage(), (int)$e->getCode());
 }
-
-// Check if database exists
-$result = mysqli_query($conn, "SHOW DATABASES LIKE '$dbname'");
-
-if (mysqli_num_rows($result) == 0) {
-    echo "Database not found. Creating and running SQL file...\n";
-
-    // Create the database
-    mysqli_query($conn, "CREATE DATABASE $dbname");
-    mysqli_select_db($conn, $dbname);
-
-    // Read and execute projects_db.sql
-    $sql = file_get_contents(__DIR__ . '/../database/projects_db.sql');
-    mysqli_multi_query($conn, $sql);
-
-    echo "Database and tables created from projects_db.sql!\n";
-
-} else {
-    mysqli_select_db($conn, $dbname);
-    echo "Database already exists. Connected!\n";
-}
-?>
