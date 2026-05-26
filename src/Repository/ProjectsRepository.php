@@ -9,14 +9,39 @@ class ProjectsRepository {
         $this->db = $db;
     }
 
-// Read All
-public function getAllProjects(): array {
-    $stmt = $this->db->query('SELECT * FROM projects_tbl');
-    $rows = $stmt->fetchAll();
+    // Read All
+    public function getAllProjects(): array {
+        $stmt = $this->db->query('SELECT * FROM projects_tbl');
+        $rows = $stmt->fetchAll();
 
-    $projects = [];
-    foreach ($rows as $row) {
-        $projects[] = new Projects(
+        $projects = [];
+        foreach ($rows as $row) {
+            $projects[] = new Projects(
+                (int)$row['proj_id'],
+                $row['proj_title'],
+                $row['proj_start_date'],
+                $row['proj_end_date'],
+                (float)$row['proj_budget'],
+                $row['proj_description'],
+                (bool)$row['proj_is_done'],
+                (bool)$row['proj_is_visible'],
+                $row['proj_type']
+            );
+        }
+        return $projects;
+    }
+
+    // Read One
+    public function getProjectById(int $id): ?Projects {
+        $stmt = $this->db->prepare('SELECT * FROM projects_tbl WHERE proj_id = :id LIMIT 1');
+        $stmt->execute(['id' => $id]);
+        $row = $stmt->fetch();
+
+        if (!$row) {
+            return null;
+        }
+
+        return new Projects(
             (int)$row['proj_id'],
             $row['proj_title'],
             $row['proj_start_date'],
@@ -28,68 +53,32 @@ public function getAllProjects(): array {
             $row['proj_type']
         );
     }
-    return $projects;
-}
 
-// Read One
-public function getProjectById(int $id): ?Projects {
-    $stmt = $this->db->prepare('SELECT * FROM projects_tbl WHERE proj_id = :id LIMIT 1');
-    $stmt->execute(['id' => $id]);
-    $row = $stmt->fetch();
-
-    if (!$row) {
-        return null;
+    // Create
+    public function addProject(Projects $project): void {
     }
 
-    return new Projects(
-        (int)$row['proj_id'],
-        $row['proj_title'],
-        $row['proj_start_date'],
-        $row['proj_end_date'],
-        (float)$row['proj_budget'],
-        $row['proj_description'],
-        (bool)$row['proj_is_done'],
-        (bool)$row['proj_is_visible'],
-        $row['proj_type']
-    );
-}
+    // Update
+    public function updateProject(Projects $updatedProject): bool {
+        $stmt = $this->db->prepare('UPDATE projects_tbl SET proj_title = :title, proj_start_date = :start_date, proj_end_date = :end_date, proj_budget = :budget, proj_description = :description, proj_is_done = :is_done, proj_is_visible = :is_visible, proj_type = :type WHERE proj_id = :id');
+        return $stmt->execute([
+            'id'          => $updatedProject->getId(),
+            'title'       => $updatedProject->getTitle(),
+            'start_date'  => $updatedProject->getStartDate(),
+            'end_date'    => $updatedProject->getEndDate(),
+            'budget'      => $updatedProject->getBudget(),
+            'description' => $updatedProject->getDescription(),
+            'is_done'     => (int)$updatedProject->getIsDone(),
+            'is_visible'  => (int)$updatedProject->getIsVisible(),
+            'type'        => $updatedProject->getType(),
+        ]);
+    }
 
-// Create
-public function addProject(Projects $project): void {
-    $stmt = $this->db->prepare('INSERT INTO projects_tbl (proj_title, proj_start_date, proj_end_date, proj_budget, proj_description, proj_is_done, proj_is_visible, proj_type) VALUES (:title, :start_date, :end_date, :budget, :description, :is_done, :is_visible, :type)');
-    $stmt->execute([
-        'title'       => $project->getTitle(),
-        'start_date'  => $project->getStartDate(),
-        'end_date'    => $project->getEndDate(),
-        'budget'      => $project->getBudget(),
-        'description' => $project->getDescription(),
-        'is_done'     => (int)$project->getIsDone(),
-        'is_visible'  => (int)$project->getIsVisible(),
-        'type'        => $project->getType(),
-    ]);
-}
-
-// Update
-public function updateProject(Projects $updatedProject): bool {
-    $stmt = $this->db->prepare('UPDATE projects_tbl SET proj_title = :title, proj_start_date = :start_date, proj_end_date = :end_date, proj_budget = :budget, proj_description = :description, proj_is_done = :is_done, proj_is_visible = :is_visible, proj_type = :type WHERE proj_id = :id');
-    return $stmt->execute([
-        'id'          => $updatedProject->getId(),
-        'title'       => $updatedProject->getTitle(),
-        'start_date'  => $updatedProject->getStartDate(),
-        'end_date'    => $updatedProject->getEndDate(),
-        'budget'      => $updatedProject->getBudget(),
-        'description' => $updatedProject->getDescription(),
-        'is_done'     => (int)$updatedProject->getIsDone(),
-        'is_visible'  => (int)$updatedProject->getIsVisible(),
-        'type'        => $updatedProject->getType(),
-    ]);
-}
-
-// Delete (soft delete)
-public function deleteProject(int $id): bool {
-    $stmt = $this->db->prepare('UPDATE projects_tbl SET proj_is_visible = 0 WHERE proj_id = :id');
-    return $stmt->execute(['id' => $id]);
-}
+    // Delete (soft delete)
+    public function deleteProject(int $id): bool {
+        $stmt = $this->db->prepare('UPDATE projects_tbl SET proj_is_visible = 0 WHERE proj_id = :id');
+        return $stmt->execute(['id' => $id]);
+    }
 }
 
 // === FIX IS HERE ===
