@@ -85,44 +85,26 @@ class ProjectsRepository {
 
     // Create
     public function addProject(Projects $project): void {
-        $this->barangay_projects[] = $project;
+       
     }
 
     // Read
     public function getAllProjects(): array {
-        return $this->barangay_projects;
+        
     }
 
     public function getProjectById(int $id): ?Projects {
-        foreach ($this->barangay_projects as $project) {
-            if ($project->getId() === $id) {
-                return $project;
-            }
-        }
-        return null; 
+       
     }
 
     // Update
     public function updateProject(Projects $updatedProject): bool {
-        foreach ($this->barangay_projects as $index => $project) {
-            if ($project->getId() === $updatedProject->getId()) {
-                $this->barangay_projects[$index] = $updatedProject;
-                return true; 
-            }
-        }
-        return false; 
+       
     }
 
     // Delete
     public function deleteProject(int $id): bool {
-        foreach ($this->barangay_projects as $index => $project) {
-            if ($project->getId() === $id) {
-                $this->barangay_projects[$index]->setIsVisible(false);
-                return true; 
-            }
-        }
-        return false; 
-    }
+       
 }
 
 // call getAllProjects and echo the results
