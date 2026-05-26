@@ -21,3 +21,15 @@ CREATE TABLE IF NOT EXISTS projects_tbl (
     proj_is_visible BOOLEAN NOT NULL DEFAULT TRUE,
     proj_type VARCHAR(255) NOT NULL
 );
+
+CREATE TABLE projects_tbl (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    title       VARCHAR(255) NOT NULL,
+    start_date  DATE NOT NULL,
+    end_date    DATE NOT NULL,
+    budget      DECIMAL(10,2) NOT NULL,
+    description TEXT NOT NULL,
+    is_done     TINYINT(1) DEFAULT 0,
+    is_visible  TINYINT(1) DEFAULT 1,
+    type        VARCHAR(50) NOT NULL
+);
