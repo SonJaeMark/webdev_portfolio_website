@@ -3,15 +3,36 @@
 require_once __DIR__ . '/../Models/Projects.php';
 
 class ProjectsRepository {
-    private PDO $db;
 
-    public function __construct(PDO $db) {
-        $this->db = $db;
+    private PDO $pdo;
+
+    public function __construct(PDO $pdo) {
+        $this->pdo = $pdo;
+    }
+           
+
+   // Create
+    public function addProject(Projects $project): void {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO projects_tbl 
+            (proj_title, proj_start_date, proj_end_date, proj_budget, proj_description, proj_is_done, proj_is_visible, proj_type) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ");
+        $stmt->execute([
+            $project->getTitle(),
+            $project->getStartDate(),
+            $project->getEndDate(),
+            $project->getBudget(),
+            $project->getDescription(),
+            $project->getIsDone() ? 1 : 0,
+            $project->getIsVisible() ? 1 : 0,
+            $project->getType()
+        ]);
     }
 
     // Read All
     public function getAllProjects(): array {
-        $stmt = $this->db->query('SELECT * FROM projects_tbl');
+        $stmt = $this->pdo->query('SELECT * FROM projects_tbl');
         $rows = $stmt->fetchAll();
 
         $projects = [];
@@ -33,7 +54,7 @@ class ProjectsRepository {
 
     // Read One
     public function getProjectById(int $id): ?Projects {
-        $stmt = $this->db->prepare('SELECT * FROM projects_tbl WHERE proj_id = :id LIMIT 1');
+        $stmt = $this->pdo->prepare('SELECT * FROM projects_tbl WHERE proj_id = :id LIMIT 1');
         $stmt->execute(['id' => $id]);
         $row = $stmt->fetch();
 
@@ -54,13 +75,9 @@ class ProjectsRepository {
         );
     }
 
-    // Create
-    public function addProject(Projects $project): void {
-    }
-
     // Update
     public function updateProject(Projects $updatedProject): bool {
-        $stmt = $this->db->prepare('UPDATE projects_tbl SET proj_title = :title, proj_start_date = :start_date, proj_end_date = :end_date, proj_budget = :budget, proj_description = :description, proj_is_done = :is_done, proj_is_visible = :is_visible, proj_type = :type WHERE proj_id = :id');
+        $stmt = $this->pdo->prepare('UPDATE projects_tbl SET proj_title = :title, proj_start_date = :start_date, proj_end_date = :end_date, proj_budget = :budget, proj_description = :description, proj_is_done = :is_done, proj_is_visible = :is_visible, proj_type = :type WHERE proj_id = :id');
         return $stmt->execute([
             'id'          => $updatedProject->getId(),
             'title'       => $updatedProject->getTitle(),
@@ -76,27 +93,27 @@ class ProjectsRepository {
 
     // Delete (soft delete)
     public function deleteProject(int $id): bool {
-        $stmt = $this->db->prepare('UPDATE projects_tbl SET proj_is_visible = 0 WHERE proj_id = :id');
+        $stmt = $this->pdo->prepare('UPDATE projects_tbl SET proj_is_visible = 0 WHERE proj_id = :id');
         return $stmt->execute(['id' => $id]);
     }
 }
 
 // === FIX IS HERE ===
 
-// 1. Load the database file
-$db = require_once __DIR__ . '/../../config/database.php';
+// // 1. Load the database file
+// $db = require_once __DIR__ . '/../../config/database.php';
 
-// 2. Double-check that $db is actually a PDO object
-if (!$db instanceof PDO) {
-    die("Error: config/database.php did not return a valid PDO instance.\n");
-}
+// // 2. Double-check that $db is actually a PDO object
+// if (!$db instanceof PDO) {
+//     die("Error: config/database.php did not return a valid PDO instance.\n");
+// }
 
-// 3. Pass the valid connection into the repository
-$projectsRepo = new ProjectsRepository($db);
-$allProjects = $projectsRepo->getAllProjects();
+// // 3. Pass the valid connection into the repository
+// $projectsRepo = new ProjectsRepository($db);
+// $allProjects = $projectsRepo->getAllProjects();
 
-foreach ($allProjects as $project) {
-    echo "Title: " . $project->getTitle() . "\n";
-    echo "Type: " . $project->getType() . "\n";
-    echo "-------------------------\n";
-}
+// foreach ($allProjects as $project) {
+//     echo "Title: " . $project->getTitle() . "\n";
+//     echo "Type: " . $project->getType() . "\n";
+//     echo "-------------------------\n";
+// }
