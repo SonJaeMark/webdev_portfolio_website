@@ -67,24 +67,3 @@ class LoginService {
     }
 }
 
-// === TESTING LOGIC ===
-
-// $db = require_once __DIR__ . '/../../config/database.php'; 
-// $usersRepo = new UsersRepository($db);
-// $loginService = new LoginService($usersRepo);
-
-// // Test the login
-// if ($loginService->login('admin', 'admin123')) {
-//     echo "Login successful!\n";
-    
-//     // Test if system remembers authentication state
-//     if ($loginService->isAuthenticated()) {
-//         echo "User is authenticated session-wise.\n";
-//     }
-    
-//     // Test logout
-//     $loginService->logout();
-//     echo "Logged out.\n";
-// } else {
-//     echo "Login failed. Ensure 'admin' exists and its password is securely hashed in the database.\n";
-// }
