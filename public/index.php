@@ -3,11 +3,11 @@ require_once __DIR__ . '/../src/Models/Projects.php';
 require_once __DIR__ . '/../src/Repository/ProjectsRepository.php';
 require_once __DIR__ . '/../src/Service/ProjectService.php';
  
-$repository = new ProjectsRepository();
-$service    = new ProjectService(new Projects(0, '', '', '', 0, '', false, true, ''));
+// $repository = new ProjectsRepository();
+// $service    = new ProjectService(new Projects(0, '', '', '', 0, '', false, true, ''));
 
-$allProjects = $repository->getAllProjects();
-$visibleProjects = array_filter($allProjects, fn($p) => $p->getIsVisible());
+// $allProjects = $repository->getAllProjects();
+// $visibleProjects = array_filter($allProjects, fn($p) => $p->getIsVisible());
 ?>
 <!DOCTYPE html>
 <html lang="en">
